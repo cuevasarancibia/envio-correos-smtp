@@ -19,37 +19,309 @@ HTML_TEMPLATE = '''
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Envío Masivo SMTP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envío Masivo SMTP - Los 100</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --error: #ef4444;
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, #f1f5f9 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.2s; }
+        .form-group:nth-child(2) { animation-delay: 0.3s; }
+        .form-group:nth-child(3) { animation-delay: 0.4s; }
+        .form-group:nth-child(4) { animation-delay: 0.5s; }
+        .form-group:nth-child(5) { animation-delay: 0.6s; }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        input[type="file"],
+        input[type="number"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: var(--bg);
+        }
+
+        input[type="file"]:hover,
+        input[type="number"]:hover {
+            border-color: var(--primary);
+            background: #f0f4ff;
+        }
+
+        input[type="file"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s both;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #1e3a8a 100%);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .results-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .results-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        .results-list {
+            list-style: none;
+        }
+
+        .results-list li {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: var(--bg);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            animation: slideInLeft 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.3s ease;
+        }
+
+        .results-list li:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        .results-list li:nth-child(1) { animation-delay: 0.1s; }
+        .results-list li:nth-child(2) { animation-delay: 0.2s; }
+        .results-list li:nth-child(3) { animation-delay: 0.3s; }
+        .results-list li:nth-child(4) { animation-delay: 0.4s; }
+        .results-list li:nth-child(5) { animation-delay: 0.5s; }
+
+        .results-list li:has(✅) {
+            border-left-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .results-list li:has(❌) {
+            border-left-color: var(--error);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Envío de Correos Masivos SMTP</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <label>Archivo de Cuentas SMTP (Excel):</label><br>
-        <input type="file" name="archivo_cuentas" required><br><br>
-        
-        <label>Archivo de Destinatarios (Excel):</label><br>
-        <input type="file" name="archivo_destinatarios" required><br><br>
+    <div class="container">
+        <header>
+            <h1>📧 Envío Masivo SMTP</h1>
+            <p class="subtitle">Los 100 - Sistema profesional de envíos</p>
+        </header>
 
-        <label>Archivo HTML del Cuerpo del Correo:</label><br>
-        <input type="file" name="archivo_html" required><br><br>
+        <div class="form-card">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>📎 Archivo de Cuentas SMTP (Excel)</label>
+                    <input type="file" name="archivo_cuentas" required accept=".xlsx,.xls">
+                </div>
 
-        <label>Archivo de Asuntos (Excel o TXT):</label><br>
-        <input type="file" name="archivo_asuntos" required><br><br>
+                <div class="form-group">
+                    <label>👥 Archivo de Destinatarios (Excel)</label>
+                    <input type="file" name="archivo_destinatarios" required accept=".xlsx,.xls">
+                </div>
 
-        <label>Cantidad máxima de correos por cuenta:</label><br>
-        <input type="number" name="max_correos" value="30" min="1" required><br><br>
+                <div class="form-group">
+                    <label>📄 Archivo HTML del Cuerpo del Correo</label>
+                    <input type="file" name="archivo_html" required accept=".html,.htm,.txt">
+                </div>
 
-        <button type="submit">Iniciar Envío</button>
-    </form>
+                <div class="form-group">
+                    <label>📋 Archivo de Asuntos (Excel o TXT)</label>
+                    <input type="file" name="archivo_asuntos" required accept=".xlsx,.xls,.txt">
+                </div>
 
-    {% if resultados %}
-        <h2>Resultados del Envío:</h2>
-        <ul>
-        {% for resultado in resultados %}
-            <li>{{ resultado }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+                <div class="form-group">
+                    <label>⚙️ Cantidad máxima de correos por cuenta</label>
+                    <input type="number" name="max_correos" value="30" min="1" required>
+                </div>
+
+                <button type="submit">🚀 Iniciar Envío</button>
+            </form>
+        </div>
+
+        {% if resultados %}
+            <div class="results-card">
+                <h2>✨ Resultados del Envío</h2>
+                <ul class="results-list">
+                {% for resultado in resultados %}
+                    <li>{{ resultado }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
 '''
